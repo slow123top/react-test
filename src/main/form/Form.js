@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Row, Col, Form, Input, Checkbox, Button, Icon} from 'antd';
 import './Form.css'
+
 class IndexForm extends Component {
     constructor() {
         super();

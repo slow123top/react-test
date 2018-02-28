@@ -1,28 +1,68 @@
 import React, {Component} from 'react'
 import {Row, Col, Table} from 'antd'
+import {axiosInstance} from '../../utils/http'
 
 class IndexTable extends Component {
     constructor() {
         super();
         this.state = {
-            table: 'table'
+            table: 'table',
+            data: []
         }
+        this.getSummary = this.getSummary.bind(this);
+    }
+
+    getSummary() {
+        axiosInstance.get('/summary').then(res => {
+            console.log(res);
+            let data = [];
+            res.data.data.forEach(item => {
+                item.data.forEach(item => {
+                    data.push(item)
+                })
+            });
+            data.forEach((item, index) => {
+                item.key = `${index}`
+            });
+            console.log(data)
+            this.setState({
+                data: data
+            })
+
+        })
+    }
+
+    componentDidMount() {
+        this.getSummary();
     }
 
     render() {
         const columns = [{
-            title: 'Name',
-            dataIndex: 'name',
-            key: 'name'
-        }, {
-            title: 'Age',
-            dataIndex: 'age',
-            key: 'age',
-        }, {
-            title: 'Address',
-            dataIndex: 'address',
-            key: 'address',
-        }];
+            title: '索引',
+            dataIndex: 'key',
+            key: 'index'
+        },
+            {
+                title: '主类',
+                dataIndex: 'mainType',
+                key: 'mainType'
+            }, {
+                title: '次类',
+                dataIndex: 'subType',
+                key: 'subType',
+            }, {
+                title: '站点',
+                dataIndex: 'address',
+                key: 'address',
+            },
+            {
+                title: 'Action',
+                key: 'action',
+                render: (text, record) => (
+                    <span><a href="#">文件详情</a></span>
+                ),
+            }
+        ];
 
         const data = [{
             key: '1',
@@ -44,7 +84,7 @@ class IndexTable extends Component {
             <div className={this.state.table}>
                 <Row type='flex' justify='center'>
                     <Col span={24} children={
-                        <Table columns={columns} dataSource={data}></Table>
+                        <Table columns={columns} dataSource={this.state.data}></Table>
                     }/>
                 </Row>
             </div>

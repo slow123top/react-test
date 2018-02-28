@@ -1,14 +1,28 @@
 import React, {Component} from "react";
+import {Route, BrowserRouter} from 'react-router-dom';
 import {Card, Form, Icon, Input, Button, Row, Col} from "antd"
+import {axiosInstance} from '../utils/http'
+import history from '../utils/history'
 
 // const FormItem = Form.Item;
 
 class Login extends Component {
+    constructor(props) {
+        super(props);
+    }
+
     handleSubmit = (e) => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
+                axiosInstance.post('/login', {
+                    username: values.userName,
+                    password: values.password
+                }).then(res => {
+                    history.push('/index');
+                })
                 console.log('Received values of form: ', values);
+                // console.log(this.props.history);
             }
         });
     }
